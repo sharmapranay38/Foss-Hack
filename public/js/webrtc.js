@@ -208,7 +208,7 @@ class Webrtc extends EventTarget {
    */
   _onSocketListeners() {
     this.log("socket listeners initialized");
-  
+
     // Room got created
     this.socket.on("created", (room, socketId, userName) => {
       this.room = room;
@@ -216,27 +216,27 @@ class Webrtc extends EventTarget {
       this._myName = userName; // Store the user's name
       this.isInitiator = true;
       this._isAdmin = true;
-  
+
       this._emit("createdRoom", { roomId: room, userName: userName });
     });
-  
+
     // Joined the room
     this.socket.on("joined", (room, socketId, userName) => {
       this.log("joined: " + room);
-  
+
       this.room = room;
       this.isReady = true;
       this._myId = socketId;
       this._myName = userName; // Store the user's name
-  
+
       this._emit("joinedRoom", { roomId: room, userName: userName });
     });
-  
+
     // Left the room
     this.socket.on("left room", (room) => {
       if (room === this.room) {
         this.warn(`Left the room ${room}`);
-  
+
         this.room = null;
         this._removeUser();
         this._emit("leftRoom", {
@@ -244,27 +244,27 @@ class Webrtc extends EventTarget {
         });
       }
     });
-  
+
     // Someone joins room
     this.socket.on("join", (room) => {
       this.log("Incoming request to join room: " + room);
-  
+
       this.isReady = true;
-  
+
       this.dispatchEvent(new Event("newJoin"));
     });
-  
+
     // Room is ready for connection
     this.socket.on("ready", (user) => {
       this.log("User: ", user, " joined room");
-  
+
       if (user !== this._myId && this.inCall) this.isInitiator = true;
     });
-  
+
     // Someone got kicked from call
     this.socket.on("kickout", (socketId) => {
       this.log("kickout user: ", socketId);
-  
+
       if (socketId === this._myId) {
         // You got kicked out
         this.dispatchEvent(new Event("kicked"));
@@ -274,19 +274,19 @@ class Webrtc extends EventTarget {
         this._removeUser(socketId);
       }
     });
-  
+
     // Logs from server
     this.socket.on("log", (log) => {
       this.log.apply(console, log);
     });
-  
+
     /**
      * Message from the server
      * Manage stream and sdp exchange between peers
      */
     this.socket.on("message", (message, socketId) => {
       this.log("From", socketId, " received:", message.type);
-  
+
       // Handle chat messages
       if (message.type === "chat") {
         this._emit("chatMessage", {
@@ -295,17 +295,17 @@ class Webrtc extends EventTarget {
         });
         return;
       }
-  
+
       // Participant leaves
       if (message.type === "leave") {
         this.log(socketId, "Left the call.");
         this._removeUser(socketId);
         this.isInitiator = true;
-  
+
         this._emit("userLeave", { socketId: socketId });
         return;
       }
-  
+
       // Avoid duplicate connections
       if (
         this.pcs[socketId] &&
@@ -314,7 +314,7 @@ class Webrtc extends EventTarget {
         this.log("Connection with ", socketId, "is already established");
         return;
       }
-  
+
       switch (message.type) {
         case "gotstream": // user is ready to share their stream
           this._connect(socketId);
@@ -493,5 +493,41 @@ class Webrtc extends EventTarget {
     }
     this._removeUser(socketId);
     this.socket.emit("kickout", socketId, this.room);
+  }
+  replaceVideoTrack(newTrack) {
+    const sender = this.peerConnection
+      .getSenders()
+      .find((s) => s.track.kind === "video");
+
+    if (sender) {
+      sender
+        .replaceTrack(newTrack)
+        .catch((err) => this._error("Track replace error:", err));
+    }
+
+    // Update local stream
+    if (this.localStream) {
+      this.localStream.getVideoTracks().forEach((track) => track.stop());
+      this.localStream.addTrack(newTrack);
+    }
+  }
+
+  async getLocalStream(enableVideo = true, constraints) {
+    try {
+      if (enableVideo) {
+        this.localStream = await navigator.mediaDevices.getUserMedia({
+          video: constraints || { width: 640, height: 480 },
+          audio: true,
+        });
+      } else {
+        this.localStream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+      }
+      return this.localStream;
+    } catch (err) {
+      this._error("Media access error:", err);
+      throw err;
+    }
   }
 }

@@ -13,7 +13,7 @@
     />
   </head>
   <body>
-    <h1> <i class="fa-solid fa-bolt"></i> Buzz Meet</h1>
+    <h1><i class="fa-solid fa-bolt"></i> Buzz Meet</h1>
 
     <div class="controls">
       <label for="roomId">Room ID</label>
@@ -22,13 +22,21 @@
       <input id="userName" type="text" placeholder="Enter your name..." />
       <button id="joinBtn">Join Room</button>
       <button id="leaveBtn">Leave Room</button>
-      <button id="recordBtn"><span class="icon"><i class="fa-solid fa-microphone-lines"></i></span> Record</button>
+      <button id="recordBtn">
+        <span class="icon"><i class="fa-solid fa-microphone-lines"></i></span>
+        Record
+      </button>
       <button id="stopRecordBtn" disabled>
         <span class="icon">⏹</span> Stop
       </button>
       <!-- Add this new button for speech-to-text -->
       <button id="startSpeechBtn">
-        <span class="icon"><i class="fa-solid fa-comment-dots"></i></span> Subtitles On
+        <span class="icon"><i class="fa-solid fa-comment-dots"></i></span>
+        Subtitles On
+      </button>
+      <button id="screenShareBtn" class="control-btn">
+        <span class="icon"><i class="fa-solid fa-display"></i></span>
+        <span class="text">Share Screen</span>
       </button>
     </div>
 
@@ -69,6 +77,7 @@
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="./js/webrtc.js"></script>
     <script src="./js/main.js"></script>
-    <script src="./js/voice_transcript.js"></script> <!-- Add this line -->
+    <script src="./js/voice_transcript.js"></script>
+    <!-- Add this line -->
   </body>
 </html>

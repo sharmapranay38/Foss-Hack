@@ -138,12 +138,12 @@ muteBtn.addEventListener("click", () => {
 
     // Update the icon inside the button
     const icon = muteBtn.querySelector(".icon");
-    icon.innerHTML = isAudioMuted 
-        ? '<i class="fa-solid fa-microphone-slash"></i>' 
-        : '<i class="fa-solid fa-microphone-lines"></i>';
+    icon.innerHTML = isAudioMuted
+      ? '<i class="fa-solid fa-microphone-slash"></i>'
+      : '<i class="fa-solid fa-microphone-lines"></i>';
 
     notify(isAudioMuted ? "Audio muted" : "Audio unmuted");
-}
+  }
 });
 
 cameraBtn.addEventListener("click", () => {
@@ -156,12 +156,12 @@ cameraBtn.addEventListener("click", () => {
     cameraBtn.classList.toggle("muted");
 
     // Use innerHTML instead of textContent to render Font Awesome icons
-    cameraBtn.querySelector(".icon").innerHTML = isVideoOff 
-        ? '<i class="fa-solid fa-video-slash"></i>' 
-        : '<i class="fa-solid fa-video"></i>';
+    cameraBtn.querySelector(".icon").innerHTML = isVideoOff
+      ? '<i class="fa-solid fa-video-slash"></i>'
+      : '<i class="fa-solid fa-video"></i>';
 
     notify(isVideoOff ? "Camera turned off" : "Camera turned on");
-}
+  }
 });
 
 // Reset controls when leaving room
@@ -304,7 +304,6 @@ webrtc.addEventListener("notification", (e) => {
   notify(notif);
 });
 
-
 // Add this to your main.js file
 const localVideoContainer = document.querySelector("#localVideo-container");
 
@@ -338,4 +337,85 @@ document.addEventListener("mousemove", (e) => {
 document.addEventListener("mouseup", () => {
   isDragging = false;
   localVideoContainer.style.cursor = "grab";
+});
+
+const screenShareBtn = document.querySelector("#screenShareBtn");
+let screenStream = null;
+
+screenShareBtn.addEventListener("click", async () => {
+  try {
+    if (!screenStream) {
+      // Start screen sharing
+      screenStream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          cursor: "always",
+          displaySurface: "window",
+        },
+        audio: false,
+      });
+
+      // Replace local video with screen share
+      localVideo.srcObject = screenStream;
+
+      // Update WebRTC with screen stream
+      webrtc.replaceVideoTrack(screenStream.getVideoTracks()[0]);
+
+      screenShareBtn.classList.add("active");
+      notify("Screen sharing started");
+
+      // Handle when user stops sharing via browser UI
+      screenStream.getVideoTracks()[0].addEventListener("ended", () => {
+        stopScreenShare();
+      });
+    } else {
+      stopScreenShare();
+    }
+  } catch (err) {
+    console.error("Screen share error:", err);
+    notify("Failed to start screen sharing");
+  }
+});
+
+function stopScreenShare() {
+  if (screenStream) {
+    screenStream.getTracks().forEach((track) => track.stop());
+    screenStream = null;
+  }
+
+  // Restore camera stream
+  const cameraStream = webrtc.localStream;
+  localVideo.srcObject = cameraStream;
+
+  // Restore original video track
+  if (cameraStream) {
+    webrtc.replaceVideoTrack(cameraStream.getVideoTracks()[0]);
+  }
+
+  screenShareBtn.classList.remove("active");
+  notify("Screen sharing stopped");
+}
+
+webrtc.addEventListener("newUser", (e) => {
+  const { socketId, stream, userName, isScreen } = e.detail;
+
+  const videoContainer = document.createElement("div");
+  videoContainer.className = `grid-item ${
+    isScreen ? "screen-share" : "camera"
+  }`;
+  videoContainer.id = socketId;
+
+  if (isScreen) {
+    videoContainer.innerHTML = `
+      <div class="screen-label">${userName}'s Screen</div>
+      <video autoplay playsinline></video>
+    `;
+  } else {
+    videoContainer.innerHTML = `
+      <p>${userName}</p>
+      <video autoplay playsinline muted></video>
+    `;
+  }
+
+  videoContainer.querySelector("video").srcObject = stream;
+  videoGrid.appendChild(videoContainer);
 });

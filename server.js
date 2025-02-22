@@ -60,6 +60,13 @@ io.sockets.on("connection", function (socket) {
     }
   });
 
+  // When sending offers/answers
+  socket.on("offer", (data) => {
+    if (data.isScreen) {
+      // Handle screen sharing peer separately if needed
+    }
+  });
+
   let roomAdmin; // save admins socket id (will get overwritten if new room gets created)
 
   /**
