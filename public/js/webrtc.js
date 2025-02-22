@@ -151,7 +151,7 @@ class Webrtc extends EventTarget {
      */
     _onSocketListeners() {
         this.log('socket listeners initialized');
-    
+
         // Room got created
         this.socket.on('created', (room, socketId, userName) => {
             this.room = room;
@@ -159,19 +159,19 @@ class Webrtc extends EventTarget {
             this._myName = userName; // Store the user's name
             this.isInitiator = true;
             this._isAdmin = true;
-    
+
             this._emit('createdRoom', { roomId: room, userName: userName });
         });
-    
+
         // Joined the room
         this.socket.on('joined', (room, socketId, userName) => {
             this.log('joined: ' + room);
-    
+
             this.room = room;
             this.isReady = true;
             this._myId = socketId;
             this._myName = userName; // Store the user's name
-    
+
             this._emit('joinedRoom', { roomId: room, userName: userName });
         });
 
@@ -281,6 +281,22 @@ class Webrtc extends EventTarget {
                     break;
             }
         });
+
+        // Handle drawing data from the server
+        this.socket.on('draw', (data) => {
+            this._emit('draw', data); // Emit a draw event for the UI to handle
+        });
+    }
+
+    /**
+     * Send drawing data to the server
+     */
+    sendDrawData(data) {
+        if (this.room) {
+            this.socket.emit('draw', data, this.room); // Send drawing data to the server
+        } else {
+            this.warn('Not in a room, cannot send drawing data');
+        }
     }
 
     _sendMessage(message, toId = null, roomId = null) {

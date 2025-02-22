@@ -1,6 +1,6 @@
 "use strict";
 
-const socket = io.connect();
+// const socket = io.connect();
 
 const localVideo = document.querySelector("#localVideo-container video");
 const videoGrid = document.querySelector("#videoGrid");
@@ -229,4 +229,65 @@ webrtc.addEventListener("notification", (e) => {
   console.log(notif);
 
   notify(notif);
+});
+
+// ============================
+// Whiteboard Functionality
+// ============================
+
+// Initialize Fabric.js canvas
+// const canvas = new fabric.Canvas("whiteboard", {
+//   isDrawingMode: true, // Enable drawing mode
+// });
+
+// let isDrawing = false;
+
+// Listen for drawing events on the canvas
+canvas.on("mouse:down", (options) => {
+  isDrawing = true;
+  const pointer = canvas.getPointer(options.e);
+  const data = {
+    type: "start",
+    x: pointer.x,
+    y: pointer.y,
+  };
+  webrtc.sendDrawData(data); // Send drawing data to the server
+});
+
+canvas.on("mouse:move", (options) => {
+  if (isDrawing) {
+    const pointer = canvas.getPointer(options.e);
+    const data = {
+      type: "draw",
+      x: pointer.x,
+      y: pointer.y,
+    };
+    webrtc.sendDrawData(data); // Send drawing data to the server
+  }
+});
+
+canvas.on("mouse:up", () => {
+  isDrawing = false;
+  const data = {
+    type: "stop",
+  };
+  webrtc.sendDrawData(data); // Send drawing data to the server
+});
+
+// Handle drawing data from the server
+webrtc.addEventListener("draw", (e) => {
+  const data = e.detail;
+
+  switch (data.type) {
+    case "start":
+      canvas.isDrawingMode = true;
+      canvas.freeDrawingBrush.onMouseDown(new fabric.Point(data.x, data.y));
+      break;
+    case "draw":
+      canvas.freeDrawingBrush.onMouseMove(new fabric.Point(data.x, data.y));
+      break;
+    case "stop":
+      canvas.freeDrawingBrush.onMouseUp();
+      break;
+  }
 });
