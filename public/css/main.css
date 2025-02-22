@@ -366,3 +366,20 @@ button:hover {
     background: rgba(0, 0, 0, 0.8);
   }
 }
+
+#subtitles-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.2em;
+    z-index: 1000;
+}
+
+#subtitles {
+    margin: 0;
+}

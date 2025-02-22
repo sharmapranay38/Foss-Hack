@@ -26,6 +26,10 @@
       <button id="stopRecordBtn" disabled>
         <span class="icon">⏹</span> Stop
       </button>
+      <!-- Add this new button for speech-to-text -->
+      <button id="startSpeechBtn">
+        <span class="icon"><i class="fa-solid fa-comment-dots"></i></span> Subtitles On
+      </button>
     </div>
 
     <p id="notification"></p>
@@ -35,29 +39,36 @@
     </div>
 
     <!-- Add this near the end of the <body> tag, before the scripts -->
-<div id="localVideo-container">
-  <video autoplay playsinline muted></video>
-  <div class="local-controls">
-    <button id="muteBtn" class="control-btn">
-      <span class="icon"><i class="fa-solid fa-microphone-lines"></i></span>
-    </button>
-    <button id="cameraBtn" class="control-btn">
-      <span class="icon"><i class="fa-solid fa-video"></i></span>
-    </button>
-  </div>
-</div>
+    <div id="localVideo-container">
+      <video autoplay playsinline muted></video>
+      <div class="local-controls">
+        <button id="muteBtn" class="control-btn">
+          <span class="icon"><i class="fa-solid fa-microphone-lines"></i></span>
+        </button>
+        <button id="cameraBtn" class="control-btn">
+          <span class="icon"><i class="fa-solid fa-video"></i></span>
+        </button>
+      </div>
+    </div>
+
     <!-- Add this near the end of the <body> tag, before the scripts -->
-<div id="chat-container">
-  <div id="chat-messages"></div>
-  <div id="chat-input-container">
-    <input id="chat-input" type="text" placeholder="Type your message..." />
-    <button id="send-chat-btn">Send</button>
-  </div>
-</div>
+    <div id="chat-container">
+      <div id="chat-messages"></div>
+      <div id="chat-input-container">
+        <input id="chat-input" type="text" placeholder="Type your message..." />
+        <button id="send-chat-btn">Send</button>
+      </div>
+    </div>
+
+    <!-- Add this for subtitles -->
+    <div id="subtitles-container">
+      <p id="subtitles"></p>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="./js/webrtc.js"></script>
     <script src="./js/main.js"></script>
+    <script src="./js/voice_transcript.js"></script> <!-- Add this line -->
   </body>
 </html>
