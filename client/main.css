@@ -1,0 +1,248 @@
+:root {
+    --yellow: #FFD700;
+    --dark: #1a1a1a;
+    --darker: #121212;
+    --light-text: #e5e5e5;
+    --gray: #333333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--darker);
+    color: var(--light-text);
+    min-height: 100vh;
+    padding: 2rem;
+    position: relative;
+}
+
+h1 {
+    color: var(--yellow);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Controls Section */
+.controls {
+    background-color: var(--dark);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    color: var(--yellow);
+    font-weight: 500;
+}
+
+input {
+    background-color: var(--gray);
+    border: 2px solid var(--gray);
+    color: var(--light-text);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: var(--yellow);
+}
+
+button {
+    background-color: var(--yellow);
+    color: var(--dark);
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+#leaveBtn {
+    background-color: #ff4444;
+    color: white;
+}
+
+#notification {
+    text-align: center;
+    color: var(--yellow);
+    margin: 1rem 0;
+    min-height: 24px;
+}
+
+/* Video Grid */
+#videos {
+    margin-right: 300px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--dark);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.grid-item {
+    padding: 10px;
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+}
+
+.grid-item p {
+    font-size: 20px;
+    margin: 0;
+    position: absolute;
+    color: white;
+    font-weight: bold;
+}
+
+.grid-item video {
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 8px;
+    background-color: var(--gray);
+    object-fit: cover;
+    box-shadow: -2px -2px 15px rgba(0, 0, 0, 0.3);
+}
+
+.grid-item .kick_btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Local Video */
+/* ... (previous CSS remains the same until local video section) ... */
+
+/* Local Video */
+#localVideo-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 280px;
+    height: 210px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: -2px -2px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+#localVideo-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: var(--gray);
+}
+
+/* Local Video Controls */
+.local-controls {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+}
+
+.control-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--dark);
+    border: 2px solid var(--yellow);
+    color: var(--yellow);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+    background-color: var(--yellow);
+    color: var(--dark);
+}
+
+.control-btn.muted {
+    background-color: #ff4444;
+    border-color: #ff4444;
+    color: white;
+}
+
+.control-btn .icon {
+    font-size: 1.2rem;
+}
+
+/* ... (rest of the CSS remains the same) ... */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #videos {
+        margin-right: 0;
+        margin-bottom: 250px;
+    }
+
+    #localVideo-container {
+        width: 200px;
+        height: 150px;
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .controls {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}
+.grid-item {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+}
+
+.grid-item p {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 1;
+}
