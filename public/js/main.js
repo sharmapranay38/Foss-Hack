@@ -1,7 +1,9 @@
 "use strict";
 
 const socket = io.connect();
-
+const chatMessages = document.querySelector("#chat-messages");
+const chatInput = document.querySelector("#chat-input");
+const sendChatBtn = document.querySelector("#send-chat-btn");
 const localVideo = document.querySelector("#localVideo-container video");
 const videoGrid = document.querySelector("#videoGrid");
 const notification = document.querySelector("#notification");
@@ -95,7 +97,28 @@ webrtc.addEventListener("leftRoom", (e) => {
   document.querySelector("h1").textContent = "";
   notify(`Left the room ${room}`);
 });
+const displayChatMessage = (message, senderName) => {
+  const messageElement = document.createElement("div");
+  messageElement.classList.add("chat-message");
+  messageElement.innerHTML = `<strong>${senderName}:</strong> ${message}`;
+  chatMessages.appendChild(messageElement);
+  chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to the latest message
+};
 
+// Send chat message
+sendChatBtn.addEventListener("click", () => {
+  const message = chatInput.value.trim();
+  if (message) {
+    webrtc.sendChatMessage(message);
+    chatInput.value = ""; // Clear the input field
+  }
+});
+
+// Handle incoming chat messages
+webrtc.addEventListener("chatMessage", (e) => {
+  const { message, senderName } = e.detail;
+  displayChatMessage(message, senderName);
+});
 /**
  * Handle media controls
  */
@@ -279,4 +302,40 @@ webrtc.addEventListener("notification", (e) => {
   console.log(notif);
 
   notify(notif);
+});
+
+
+// Add this to your main.js file
+const localVideoContainer = document.querySelector("#localVideo-container");
+
+let isDragging = false;
+let offsetX, offsetY;
+
+// Mouse down event to start dragging
+localVideoContainer.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  offsetX = e.clientX - localVideoContainer.getBoundingClientRect().left;
+  offsetY = e.clientY - localVideoContainer.getBoundingClientRect().top;
+  localVideoContainer.style.cursor = "grabbing";
+});
+
+// Mouse move event to drag the window
+document.addEventListener("mousemove", (e) => {
+  if (isDragging) {
+    const x = e.clientX - offsetX;
+    const y = e.clientY - offsetY;
+
+    // Ensure the window stays within the viewport
+    const maxX = window.innerWidth - localVideoContainer.offsetWidth;
+    const maxY = window.innerHeight - localVideoContainer.offsetHeight;
+
+    localVideoContainer.style.left = `${Math.min(Math.max(x, 0), maxX)}px`;
+    localVideoContainer.style.top = `${Math.min(Math.max(y, 0), maxY)}px`;
+  }
+});
+
+// Mouse up event to stop dragging
+document.addEventListener("mouseup", () => {
+  isDragging = false;
+  localVideoContainer.style.cursor = "grab";
 });
