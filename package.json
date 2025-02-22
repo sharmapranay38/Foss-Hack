@@ -1,5 +1,5 @@
 {
-  "name": "webrtc-video-conference",
+  "name": "foss-hack-buzzmeet",
   "version": "1.0.0",
   "description": "webrtc video conference example (not using webrtc libraries)",
   "main": "server.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/avoup/webrtc-video-conference.git"
+    "url": "git+https://github.com/sharmapranay38/foss-hack-buzzmeet.git"
   },
   "keywords": [
     "webrtc",
@@ -20,12 +20,12 @@
     "conference",
     "tutorial"
   ],
-  "author": "avoup",
+  "author": "sharmapranay38",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/avoup/webrtc-video-conference/issues"
+    "url": "https://github.com/sharmapranay38/foss-hack-buzzmeet/issues"
   },
-  "homepage": "https://github.com/avoup/webrtc-video-conference#readme",
+  "homepage": "https://github.com/sharmapranay38/foss-hack-buzzmeet#readme",
   "optionalDependencies": {
     "nodemon": "^2.0.12"
   },

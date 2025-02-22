@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buzz Meet</title>
+    <link rel="shortcut icon" type="image/ico" href="/logo.png" />
+    <link rel="stylesheet" href="css/main.css" />
+    <!-- Include Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <h1>Buzz Meet</h1>
+
+    <div class="controls">
+      <label for="roomId">Room ID</label>
+      <input id="roomId" type="text" placeholder="Enter room ID..." />
+      <label for="userName">Your Name</label>
+      <input id="userName" type="text" placeholder="Enter your name..." />
+      <button id="joinBtn">Join Room</button>
+      <button id="leaveBtn">Leave Room</button>
+    </div>
+
+    <p id="notification"></p>
+
+    <div id="videos">
+      <div id="videoGrid" class="grid-container"></div>
+    </div>
+
+    <div id="localVideo-container">
+      <video autoplay playsinline muted></video>
+      <div class="local-controls">
+        <button id="muteBtn" class="control-btn">
+          <span class="icon"><i class="fas fa-microphone"></i></span>
+        </button>
+        <button id="cameraBtn" class="control-btn">
+          <span class="icon"><i class="fas fa-video"></i></span>
+        </button>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="./js/webrtc.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
