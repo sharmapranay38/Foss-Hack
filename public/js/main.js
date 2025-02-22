@@ -198,6 +198,45 @@ webrtc.addEventListener("newUser", (e) => {
   videoGrid.append(videoContainer);
 });
 
+// Add these near your mute/camera button declarations
+const recordBtn = document.querySelector("#recordBtn");
+const stopRecordBtn = document.querySelector("#stopRecordBtn");
+let isRecording = false;
+
+// Add these event listeners
+recordBtn.addEventListener("click", () => {
+  webrtc.startRecording();
+  isRecording = true;
+  recordBtn.disabled = true;
+  stopRecordBtn.disabled = false;
+  notify("Recording started...");
+});
+
+stopRecordBtn.addEventListener("click", () => {
+  webrtc.stopRecording();
+  isRecording = false;
+  recordBtn.disabled = false;
+  stopRecordBtn.disabled = true;
+  notify("Recording stopped");
+});
+
+// Handle the recorded audio
+webrtc.addEventListener("recordingComplete", (e) => {
+  const audioBlob = e.detail.audioBlob;
+  const audioUrl = URL.createObjectURL(audioBlob);
+
+  // Create downloadable link
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = audioUrl;
+  a.download = `recording-${Date.now()}.webm`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(audioUrl);
+
+  notify("Recording saved!");
+});
+
 /**
  * Handle user got removed
  */
