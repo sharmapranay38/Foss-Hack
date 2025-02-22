@@ -1,6 +1,7 @@
 "use strict";
 
-// const socket = io.connect();
+// Initialize Socket.IO
+const socket = io.connect(); // Declare socket here
 
 const localVideo = document.querySelector("#localVideo-container video");
 const videoGrid = document.querySelector("#videoGrid");
@@ -46,11 +47,13 @@ const pcConfig = {
 /**
  * Initialize webrtc
  */
-const webrtc = new Webrtc(socket, pcConfig, {
+const webrtc = new Webrtc(socket, pcConfig, { // Pass socket to Webrtc
   log: true,
   warn: true,
   error: true,
 });
+
+// Rest of your main.js code...
 
 /**
  * Create or join a room
@@ -234,13 +237,12 @@ webrtc.addEventListener("notification", (e) => {
 // ============================
 // Whiteboard Functionality
 // ============================
-
 // Initialize Fabric.js canvas
-// const canvas = new fabric.Canvas("whiteboard", {
-//   isDrawingMode: true, // Enable drawing mode
-// });
+const canvas = new fabric.Canvas("whiteboard", {
+  isDrawingMode: true, // Enable drawing mode
+});
 
-// let isDrawing = false;
+let isDrawing = false;
 
 // Listen for drawing events on the canvas
 canvas.on("mouse:down", (options) => {

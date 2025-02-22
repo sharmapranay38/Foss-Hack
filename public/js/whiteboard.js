@@ -1,13 +1,5 @@
 'use strict';
 
-const canvas = new fabric.Canvas('whiteboard', {
-    isDrawingMode: true, // Enable drawing mode
-});
-
-const socket = io.connect();
-
-let isDrawing = false;
-
 // Listen for drawing events on the canvas
 canvas.on('mouse:down', (options) => {
     isDrawing = true;

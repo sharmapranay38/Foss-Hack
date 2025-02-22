@@ -2,13 +2,13 @@
 
 class Webrtc extends EventTarget {
     constructor(
-        socket,
+        socket, // Socket is passed as a parameter
         pcConfig = null,
         logging = { log: true, warn: true, error: true }
     ) {
         super();
         this.room;
-        this.socket = socket;
+        this.socket = socket; // Use the passed socket
         this.pcConfig = pcConfig;
 
         this._myId = null;
@@ -291,13 +291,16 @@ class Webrtc extends EventTarget {
     /**
      * Send drawing data to the server
      */
-    sendDrawData(data) {
-        if (this.room) {
-            this.socket.emit('draw', data, this.room); // Send drawing data to the server
-        } else {
-            this.warn('Not in a room, cannot send drawing data');
-        }
+    /**
+ * Send drawing data to the server
+ */
+sendDrawData(data) {
+    if (this.room) {
+        this.socket.emit('draw', data, this.room); // Send drawing data to the server
+    } else {
+        this.warn('Not in a room, cannot send drawing data');
     }
+}
 
     _sendMessage(message, toId = null, roomId = null) {
         this.socket.emit('message', message, toId, roomId);
