@@ -37,7 +37,7 @@ recognition.onstart = function() {
 
 recognition.onspeechend = function() {
     console.log('You were quiet for a while so voice recognition turned itself off.');
-    startSpeechBtn.innerHTML = '<span class="icon"><i class="fa-solid fa-comment-dots"></i></span> Subtitles Off';
+    startSpeechBtn.innerHTML = '<span class="icon"><i class="fa-solid fa-comment-dots"></i></span> Subtitles On';
     isListening = false;
 }
 
@@ -52,10 +52,10 @@ startSpeechBtn.addEventListener('click', function() {
     if (isListening) {
         recognition.stop();
         isListening = false;
-        startSpeechBtn.innerHTML = '<span class="icon"><i class="fa-solid fa-comment-dots"></i></span> Start Speech-to-Text';
+        startSpeechBtn.innerHTML = '<span class="icon"><i class="fa-solid fa-comment-dots"></i></span> Subtitles On';
     } else {
         recognition.start();
         isListening = true;
-        startSpeechBtn.innerHTML = '<span class="icon"><i class="fa-solid fa-comment-dots"></i></span> Stop Speech-to-Text';
+        startSpeechBtn.innerHTML = '<span class="icon"><i class="fa-solid fa-comment-dots"></i></span> Subtitles Off';
     }
 });
