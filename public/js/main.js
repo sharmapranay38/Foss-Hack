@@ -112,9 +112,15 @@ muteBtn.addEventListener("click", () => {
     isAudioMuted = !isAudioMuted;
     audioTrack.enabled = !isAudioMuted;
     muteBtn.classList.toggle("muted");
-    muteBtn.querySelector(".icon").textContent = isAudioMuted ? "🔇" : "🎤";
+
+    // Update the icon inside the button
+    const icon = muteBtn.querySelector(".icon");
+    icon.innerHTML = isAudioMuted 
+        ? '<i class="fa-solid fa-microphone-slash"></i>' 
+        : '<i class="fa-solid fa-microphone-lines"></i>';
+
     notify(isAudioMuted ? "Audio muted" : "Audio unmuted");
-  }
+}
 });
 
 cameraBtn.addEventListener("click", () => {
@@ -125,9 +131,14 @@ cameraBtn.addEventListener("click", () => {
     isVideoOff = !isVideoOff;
     videoTrack.enabled = !isVideoOff;
     cameraBtn.classList.toggle("muted");
-    cameraBtn.querySelector(".icon").textContent = isVideoOff ? "🚫" : "📹";
+
+    // Use innerHTML instead of textContent to render Font Awesome icons
+    cameraBtn.querySelector(".icon").innerHTML = isVideoOff 
+        ? '<i class="fa-solid fa-video-slash"></i>' 
+        : '<i class="fa-solid fa-video"></i>';
+
     notify(isVideoOff ? "Camera turned off" : "Camera turned on");
-  }
+}
 });
 
 // Reset controls when leaving room

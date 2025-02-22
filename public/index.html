@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Buzz Meet</title>
-    <link rel="shortcut icon" type="image/ico" href="/logo.png" />
+    <link rel="shortcut icon" type="image/ico" href="/lightning.png" />
     <link rel="stylesheet" href="css/main.css" />
     <!-- Include Font Awesome -->
     <link
@@ -13,7 +13,7 @@
     />
   </head>
   <body>
-    <h1>Buzz Meet</h1>
+    <h1> <i class="fa-solid fa-bolt"></i> Buzz Meet</h1>
 
     <div class="controls">
       <label for="roomId">Room ID</label>
@@ -22,7 +22,7 @@
       <input id="userName" type="text" placeholder="Enter your name..." />
       <button id="joinBtn">Join Room</button>
       <button id="leaveBtn">Leave Room</button>
-      <button id="recordBtn"><span class="icon">⏺</span> Record</button>
+      <button id="recordBtn"><span class="icon"><i class="fa-solid fa-microphone-lines"></i></span> Record</button>
       <button id="stopRecordBtn" disabled>
         <span class="icon">⏹</span> Stop
       </button>
@@ -38,7 +38,7 @@
       <video autoplay playsinline muted></video>
       <div class="local-controls">
         <button id="muteBtn" class="control-btn">
-          <span class="icon"><i class="fas fa-microphone"></i></span>
+          <span class="icon"><i class="fa-solid fa-microphone-lines"></i></span>
         </button>
         <button id="cameraBtn" class="control-btn">
           <span class="icon"><i class="fas fa-video"></i></span>
