@@ -41,16 +41,65 @@ class Webrtc extends EventTarget {
       })
     );
   }
+
   sendChatMessage(message) {
     if (!this.room) {
       this.warn("You are not in a room");
       return;
     }
+
+    // Check if the message is for the chatbot
+    if (message.startsWith("@ai")) {
+      const prompt = message.slice(3).trim(); // Extract the prompt after "@ai"
+      this._handleChatbotPrompt(prompt);
+      return;
+    }
+
+    // Send regular chat message to everyone in the room
     this._sendMessage(
       { type: "chat", message, senderName: this._myName },
-      null,
+      null, // Send to all users (broadcast)
       this.room
     );
+
+    // Emit the message locally so the sender can see it
+    this._emit("chatMessage", {
+      message: message,
+      senderName: this._myName,
+    });
+  }
+
+  _handleChatbotPrompt(prompt) {
+    // Simple chatbot logic (replace with API call if needed)
+    let response = "I'm sorry, I didn't understand that.";
+    if (prompt.toLowerCase().includes("hello")) {
+      response = "Hello! How can I assist you today?";
+    } else if (prompt.toLowerCase().includes("how are you")) {
+      response = "I'm just a bot, but I'm here to help!";
+    } else if (prompt.toLowerCase().includes("thank you")) {
+      response = "You're welcome!";
+    } else if (prompt.toLowerCase().includes("goodbye")) {
+      response = "Goodbye! Have a nice day!";
+    } else if (prompt.toLowerCase().includes("bye")) {
+      response = "Goodbye! Have a nice day!";
+    } else if (prompt.toLowerCase().includes("hi")) {
+      response = "Hello! How can I assist you today?";
+    } else if (prompt.toLowerCase().includes("foss hack")) {
+      response = "The FOSS Hack is a hackathon event held by the FOSS community to promote open-source software development and innovation.";
+    }
+
+    // Broadcast the AI's response to everyone in the room
+    this._sendMessage(
+      { type: "chat", message: response, senderName: "AI Bot" },
+      null, // Send to all users (broadcast)
+      this.room
+    );
+
+    // Emit the AI's response locally so the sender can see it
+    this._emit("chatMessage", {
+      message: response,
+      senderName: "AI Bot",
+    });
   }
 
   get localStream() {
@@ -208,7 +257,7 @@ class Webrtc extends EventTarget {
    */
   _onSocketListeners() {
     this.log("socket listeners initialized");
-  
+
     // Room got created
     this.socket.on("created", (room, socketId, userName) => {
       this.room = room;
@@ -216,27 +265,27 @@ class Webrtc extends EventTarget {
       this._myName = userName; // Store the user's name
       this.isInitiator = true;
       this._isAdmin = true;
-  
+
       this._emit("createdRoom", { roomId: room, userName: userName });
     });
-  
+
     // Joined the room
     this.socket.on("joined", (room, socketId, userName) => {
       this.log("joined: " + room);
-  
+
       this.room = room;
       this.isReady = true;
       this._myId = socketId;
       this._myName = userName; // Store the user's name
-  
+
       this._emit("joinedRoom", { roomId: room, userName: userName });
     });
-  
+
     // Left the room
     this.socket.on("left room", (room) => {
       if (room === this.room) {
         this.warn(`Left the room ${room}`);
-  
+
         this.room = null;
         this._removeUser();
         this._emit("leftRoom", {
@@ -244,27 +293,27 @@ class Webrtc extends EventTarget {
         });
       }
     });
-  
+
     // Someone joins room
     this.socket.on("join", (room) => {
       this.log("Incoming request to join room: " + room);
-  
+
       this.isReady = true;
-  
+
       this.dispatchEvent(new Event("newJoin"));
     });
-  
+
     // Room is ready for connection
     this.socket.on("ready", (user) => {
       this.log("User: ", user, " joined room");
-  
+
       if (user !== this._myId && this.inCall) this.isInitiator = true;
     });
-  
+
     // Someone got kicked from call
     this.socket.on("kickout", (socketId) => {
       this.log("kickout user: ", socketId);
-  
+
       if (socketId === this._myId) {
         // You got kicked out
         this.dispatchEvent(new Event("kicked"));
@@ -274,19 +323,19 @@ class Webrtc extends EventTarget {
         this._removeUser(socketId);
       }
     });
-  
+
     // Logs from server
     this.socket.on("log", (log) => {
       this.log.apply(console, log);
     });
-  
+
     /**
      * Message from the server
      * Manage stream and sdp exchange between peers
      */
     this.socket.on("message", (message, socketId) => {
       this.log("From", socketId, " received:", message.type);
-  
+
       // Handle chat messages
       if (message.type === "chat") {
         this._emit("chatMessage", {
@@ -295,17 +344,17 @@ class Webrtc extends EventTarget {
         });
         return;
       }
-  
+
       // Participant leaves
       if (message.type === "leave") {
         this.log(socketId, "Left the call.");
         this._removeUser(socketId);
         this.isInitiator = true;
-  
+
         this._emit("userLeave", { socketId: socketId });
         return;
       }
-  
+
       // Avoid duplicate connections
       if (
         this.pcs[socketId] &&
@@ -314,7 +363,7 @@ class Webrtc extends EventTarget {
         this.log("Connection with ", socketId, "is already established");
         return;
       }
-  
+
       switch (message.type) {
         case "gotstream": // user is ready to share their stream
           this._connect(socketId);

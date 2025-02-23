@@ -383,3 +383,13 @@ button:hover {
 #subtitles {
     margin: 0;
 }
+
+/* Add this to your CSS file */
+.chatbot-message {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+        background: #1A1A1A;
+        font: pink;
+      
+  }
