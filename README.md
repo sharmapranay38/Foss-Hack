@@ -1,4 +1,4 @@
-# BuzzMeet
+# BuzzMeet ⚡️
 <img width="1440" height="271" alt="Screenshot 2025-02-23 at 7 25 53 AM" src="https://github.com/user-attachments/assets/fa763f9d-cca7-4813-a681-6e011b905261" />
 
 ## Overview
