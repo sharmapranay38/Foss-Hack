@@ -121,9 +121,6 @@ webrtc.addEventListener("chatMessage", (e) => {
   displayChatMessage(message, senderName);
 });
 
-/**
- * Handle media controls
- */
 const muteBtn = document.querySelector("#muteBtn");
 const cameraBtn = document.querySelector("#cameraBtn");
 let isAudioMuted = false;
@@ -177,9 +174,10 @@ webrtc.addEventListener("leftRoom", (e) => {
   isVideoOff = false;
   muteBtn.classList.remove("muted");
   cameraBtn.classList.remove("muted");
-  muteBtn.querySelector(".icon").innerHTML = '<i class="fa-solid fa-microphone-lines"></i>';
-cameraBtn.querySelector(".icon").innerHTML = '<i class="fa-solid fa-video"></i>';
-
+  muteBtn.querySelector(".icon").innerHTML =
+    '<i class="fa-solid fa-microphone-lines"></i>';
+  cameraBtn.querySelector(".icon").innerHTML =
+    '<i class="fa-solid fa-video"></i>';
 });
 
 // Get local media stream
